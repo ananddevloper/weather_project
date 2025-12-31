@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:lottie/lottie.dart';
@@ -14,6 +13,7 @@ class WeatherApp extends StatefulWidget {
 }
 
 class _WeatherAppState extends State<WeatherApp> {
+  bool loading = false;
   String latitiude = '19.1855';
   String longitude = '72.8587';
 
@@ -26,7 +26,6 @@ class _WeatherAppState extends State<WeatherApp> {
   var sulphurDioxideV = '';
 
   List<String> dayList = [];
-
   List<String> miniMumTemperatureList = [];
   List<String> maxiMumTemperatureList = [];
   List<String> timeList = [];
@@ -36,22 +35,24 @@ class _WeatherAppState extends State<WeatherApp> {
     Uri uri = Uri.parse(
       "https://api.open-meteo.com/v1/forecast?latitude=$latitiude&longitude=$longitude&current_weather=true",
     );
-    print(uri.toString());
-    Response response = await get(uri);
+    
+    Response response = await get(uri);       // Es line ka matlab hota hai API ko call karna
 
-    Map data = jsonDecode(response.body);
+    Map data = jsonDecode(response.body);     // Es line ka matlab hai pura data lena
 
-    Map current = data['current_weather'];
+    Map current = data['current_weather'];    // Es line ka matlab hai open meteo api ke undar jobhi data hai usko assess karna
 
-    num temp = current['temperature'];
+    num temp = current['temperature'];        // Es line ka matlab. hai jo hume chaiye tha o nikala humne,
 
     num windspeeds = current["windspeed"];
 
-    tempratureV = temp.toString();
+    tempratureV = temp.toString();   // Ye line ka matlab hai ye value ko string me convort karta hai
 
     wind = windspeeds.toString();
 
-    setState(() {});
+    setState(() {
+      bool loading = true;
+    });
   }
 
   void fetchAirquality() async {
@@ -191,7 +192,7 @@ class _WeatherAppState extends State<WeatherApp> {
     List timList = allHourly['time'];
     List temperatureLists = allHourly['temperature_2m'];
 
-    timeList = timList.map((e) => e.toString()).toList();
+    timeList = timList.map((e) => e.toString()).toList(); // ES line ka matlab hai ek list limit leta hai phir us lines ke har elements ko (e) string me badal deta hai phir use ek nai timelist me store karta hai.
     temperatureList = temperatureLists.map((e) => e.toString()).toList();
 
     setState(() {});
@@ -209,7 +210,6 @@ class _WeatherAppState extends State<WeatherApp> {
 
   return "$hour12:$minute $period";
 }
-
 
   @override
   void initState() {
